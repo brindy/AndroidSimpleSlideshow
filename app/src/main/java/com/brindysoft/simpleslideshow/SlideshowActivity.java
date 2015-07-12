@@ -27,8 +27,6 @@ import roboguice.inject.InjectView;
 @ContentView(R.layout.slideshow_activity)
 public class SlideshowActivity extends RoboAppCompatActivity implements SlideshowPresenter.View {
 
-    private static final int REQUEST_CODE_SELECT_PICTURE = 1;
-
     @Inject
     private SlideshowPresenter presenter;
 
@@ -120,10 +118,7 @@ public class SlideshowActivity extends RoboAppCompatActivity implements Slidesho
 
     @Override
     public void selectWatermark() {
-        Intent intent = new Intent();
-        intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent, "Select Picture"), REQUEST_CODE_SELECT_PICTURE);
+        selectPicture();
     }
 
     @Override
@@ -136,9 +131,7 @@ public class SlideshowActivity extends RoboAppCompatActivity implements Slidesho
             return;
         }
 
-        Uri selectedImageUri = data.getData();
-        String selectedImagePath = getPath(selectedImageUri);
-        presenter.watermarkSelected(selectedImagePath);
+        presenter.watermarkSelected(data.getData().toString());
     }
 
     @Override

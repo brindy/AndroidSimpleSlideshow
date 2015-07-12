@@ -123,8 +123,10 @@ public class SlideshowPresenter {
 
     public void pictureSelected(int position) {
         index = position;
-        timer.cancel();
-        timer = new Timer();
+        if (null != timer) {
+            timer.cancel();
+            timer = new Timer();
+        }
         scheduleGotoNext(position);
     }
 

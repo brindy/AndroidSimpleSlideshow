@@ -3,6 +3,7 @@ package com.brindysoft.simpleslideshow;
 import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
@@ -26,8 +27,6 @@ import roboguice.inject.InjectView;
 
 @ContentView(R.layout.edit_pictures_activity)
 public class EditPicturesActivity extends RoboAppCompatActivity implements EditPicturesPresenter.View {
-
-    private static final int REQUEST_CODE_SELECT_PICTURE = 1;
 
     @Inject
     private EditPicturesPresenter presenter;
@@ -104,16 +103,6 @@ public class EditPicturesActivity extends RoboAppCompatActivity implements EditP
     }
 
     @Override
-    public void selectPicture() {
-
-        Intent intent = new Intent();
-        intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent, getString(R.string.edit_pictures_select_picture_prompt)), REQUEST_CODE_SELECT_PICTURE);
-
-    }
-
-    @Override
     public void picturesUpdated() {
         invalidateOptionsMenu();
         recyclerView.getAdapter().notifyDataSetChanged();
@@ -149,8 +138,7 @@ public class EditPicturesActivity extends RoboAppCompatActivity implements EditP
         }
 
         Uri selectedImageUri = data.getData();
-        String selectedImagePath = getPath(selectedImageUri);
-        presenter.imageSelected(selectedImagePath);
+        presenter.imageSelected(selectedImageUri.toString());
     }
 
     private void configureRecyclerView() {
@@ -174,11 +162,19 @@ public class EditPicturesActivity extends RoboAppCompatActivity implements EditP
             holder.delay.setText(getString(R.string.edit_pictures_delay, model.getDelaySeconds()));
             holder.position = position;
 
-            // TODO show selected item
             if (presenter.isSelectedPictureIndex(position)) {
-                holder.card.setCardElevation(getResources().getDisplayMetrics().density * 10);
+                setElevation(holder.card, getResources().getDisplayMetrics().density * 10);
             } else {
-                holder.card.setCardElevation(0);
+                setElevation(holder.card, 0);
+            }
+
+        }
+
+        private void setElevation(CardView cardView, float f) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                cardView.setElevation(f);
+            } else {
+                cardView.setCardElevation(f);
             }
         }
 

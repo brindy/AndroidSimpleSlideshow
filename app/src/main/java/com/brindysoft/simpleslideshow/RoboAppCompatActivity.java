@@ -1,11 +1,13 @@
 package com.brindysoft.simpleslideshow;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.ImageView;
 
 import com.google.inject.Key;
 
@@ -30,6 +32,8 @@ import roboguice.util.RoboContext;
  * Based on https://github.com/roboguice/roboguice/wiki/Using-your-own-BaseActivity-with-RoboGuice
  */
 public abstract class RoboAppCompatActivity extends AppCompatActivity implements RoboContext {
+
+    protected static final int REQUEST_CODE_SELECT_PICTURE = 1;
 
     protected EventManager eventManager;
     protected HashMap<Key<?>,Object> scopedObjects = new HashMap<Key<?>, Object>();
@@ -106,7 +110,19 @@ public abstract class RoboAppCompatActivity extends AppCompatActivity implements
             }
         }
 
-        return uri.getPath();
+        String path = uri.getPath();
+        if (null == path) {
+            path = uri.toString();
+        }
+        return path;
+    }
+
+    public void selectPicture() {
+
+        Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        intent.setType("image/*");
+        startActivityForResult(Intent.createChooser(intent, getString(R.string.edit_pictures_select_picture_prompt)), REQUEST_CODE_SELECT_PICTURE);
+
     }
 
 }
