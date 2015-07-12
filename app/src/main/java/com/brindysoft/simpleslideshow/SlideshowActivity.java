@@ -77,6 +77,10 @@ public class SlideshowActivity extends RoboAppCompatActivity implements Slidesho
             case R.id.slideshow_menu_choose_watermark:
                 presenter.selectWatermark();
                 return true;
+
+            case R.id.slideshow_menu_clear_watermark:
+                presenter.watermarkCleared();
+                return true;
         }
 
         return super.onOptionsItemSelected(item);
@@ -154,12 +158,32 @@ public class SlideshowActivity extends RoboAppCompatActivity implements Slidesho
         watermark.setImageURI(Uri.parse(uri));
     }
 
+    @Override
+    public void clearWatermark() {
+        watermark.setImageURI(null);
+    }
+
     public void onClick(View view) {
         presenter.toggleFullScreen();
     }
 
     private void configureViewPager() {
         viewPager.setAdapter(new ImagePagerAdapter(getSupportFragmentManager()));
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                presenter.pictureSelected(position);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+            }
+        });
     }
 
     private void goFullScreen() {

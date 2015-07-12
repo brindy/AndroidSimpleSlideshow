@@ -1,8 +1,5 @@
 package com.brindysoft.simpleslideshow.mvp;
 
-import android.util.Log;
-
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -11,8 +8,6 @@ import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 
 import roboguice.event.EventManager;
-import roboguice.event.EventThread;
-import roboguice.event.Observes;
 
 public class SlideshowPresenter {
 
@@ -44,6 +39,11 @@ public class SlideshowPresenter {
             gotoPicture(0);
         }
 
+        if (null != persistenceManager.getWatermark()) {
+            view.showWatermark(persistenceManager.getWatermark());
+        } else {
+            view.clearWatermark();
+        }
     }
 
     public void toggleFullScreen() {
@@ -66,6 +66,7 @@ public class SlideshowPresenter {
 
     public void editPictures() {
         timer.cancel();
+        timer = null;
         view.gotoEditPictures();
     }
 
@@ -75,19 +76,27 @@ public class SlideshowPresenter {
 
     public void watermarkSelected(String uri) {
         view.showWatermark(uri);
+        persistenceManager.saveWatermark(uri);
+    }
+
+    public void watermarkCleared() {
+        persistenceManager.removeWatermark();
+        view.clearWatermark();
     }
 
     private void gotoPicture(int index) {
         eventManager.fire(new GotoPictureEvent(index));
+        scheduleGotoNext(index);
+    }
 
-        Log.d(getClass().getSimpleName(), "scheduling for " + pictures.get(index).getDelaySeconds() + " seconds");
-
-        timer.schedule(createGotoNextPictureTask(),
-                TimeUnit.SECONDS.toMillis(pictures.get(index).getDelaySeconds()));
+    private void scheduleGotoNext(int index) {
+        if (null != timer) {
+            timer.schedule(createGotoNextPictureTask(),
+                    TimeUnit.SECONDS.toMillis(pictures.get(index).getDelaySeconds()));
+        }
     }
 
     private void gotoNextPicture() {
-        Log.d(getClass().getSimpleName(), "going to picture next picture " + index);
         index++;
         if (index >= pictures.size()) {
             index = 0;
@@ -112,6 +121,12 @@ public class SlideshowPresenter {
         };
     }
 
+    public void pictureSelected(int position) {
+        timer.cancel();
+        timer = new Timer();
+        scheduleGotoNext(position);
+    }
+
     public interface View {
 
         void goFullScreen(long delay);
@@ -131,6 +146,8 @@ public class SlideshowPresenter {
         void showPictures();
 
         void showWatermark(String uri);
+
+        void clearWatermark();
 
     }
 

@@ -4,6 +4,7 @@
     <string name="slideshow_menu_edit_pictures">Manage Pictures</string>
     <string name="slideshow_menu_choose_watermark">Choose Watermark</string>
     <string name="slideshow_no_pictures">Use the menu to manage your pictures</string>
+    <string name="slideshow_menu_clear_watermark">Clear Watermark</string>
 
     <string name="edit_pictures_menu_add_picture">Add Picture</string>
     <string name="edit_pictures_menu_delete_picture">Delete Picture</string>

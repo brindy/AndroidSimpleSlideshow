@@ -35,8 +35,9 @@ public class EditPicturesPresenter {
         pictures.add(new PictureModel(uri, 5));
         save();
 
-        view.picturesUpdated();
         selectedPictureIndex = pictures.size() - 1;
+
+        view.picturesUpdated();
         view.editSelectedPicture();
     }
 

@@ -9,4 +9,8 @@
         android:id="@+id/slideshow_menu_choose_watermark"
         android:title="@string/slideshow_menu_choose_watermark" />
 
+    <item
+        android:id="@+id/slideshow_menu_clear_watermark"
+        android:title="@string/slideshow_menu_clear_watermark" />
+
 </menu>
