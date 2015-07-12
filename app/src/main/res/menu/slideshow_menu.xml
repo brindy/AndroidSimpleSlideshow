@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/slideshow_menu_edit_pictures"
+        android:title="@string/slideshow_menu_edit_pictures" />
+
+    <item
+        android:id="@+id/slideshow_menu_choose_watermark"
+        android:title="@string/slideshow_menu_choose_watermark" />
+
+</menu>

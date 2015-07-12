@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">Simple Slideshow</string>
+
+    <string name="slideshow_menu_edit_pictures">Manage Pictures</string>
+    <string name="slideshow_menu_choose_watermark">Choose Watermark</string>
+    <string name="slideshow_no_pictures">Use the menu to manage your pictures</string>
+
+    <string name="edit_pictures_menu_add_picture">Add Picture</string>
+    <string name="edit_pictures_menu_delete_picture">Delete Picture</string>
+
+    <string name="edit_pictures_no_pictures_label">Use the menu to add a new picture.</string>
+    <string name="edit_pictures_select_picture_prompt">Select Picture</string>
+    <string name="edit_pictures_delay">%d seconds</string>
+
+</resources>
