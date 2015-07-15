@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.brindysoft.simpleslideshow.fragments.AboutDialogFragment;
 import com.brindysoft.simpleslideshow.fragments.ImageFragment;
 import com.brindysoft.simpleslideshow.mvp.GotoPictureEvent;
 import com.brindysoft.simpleslideshow.mvp.SlideshowPresenter;
@@ -80,6 +81,10 @@ public class SlideshowActivity extends RoboAppCompatActivity implements Slidesho
             case R.id.slideshow_menu_clear_watermark:
                 presenter.watermarkCleared();
                 return true;
+
+            case R.id.slideshow_menu_about:
+                presenter.about();
+                return true;
         }
 
         return super.onOptionsItemSelected(item);
@@ -104,7 +109,6 @@ public class SlideshowActivity extends RoboAppCompatActivity implements Slidesho
 
     @Override
     public void picturesUpdated() {
-        // TODO if this doesn't work, null it during onPause
         configureViewPagerAdapter();
     }
 
@@ -156,6 +160,11 @@ public class SlideshowActivity extends RoboAppCompatActivity implements Slidesho
     @Override
     public void clearWatermark() {
         watermark.setImageURI(null);
+    }
+
+    @Override
+    public void showAbout() {
+        AboutDialogFragment.newInstance().show(getSupportFragmentManager(), "about-dialog");
     }
 
     public void onClick(View view) {

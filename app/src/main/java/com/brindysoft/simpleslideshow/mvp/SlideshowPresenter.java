@@ -130,6 +130,10 @@ public class SlideshowPresenter {
         scheduleGotoNext(position);
     }
 
+    public void about() {
+        view.showAbout();
+    }
+
     public interface View {
 
         void goFullScreen(long delay);
@@ -152,6 +156,7 @@ public class SlideshowPresenter {
 
         void clearWatermark();
 
+        void showAbout();
     }
 
 }
