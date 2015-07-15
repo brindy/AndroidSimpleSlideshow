@@ -28,6 +28,7 @@ public class SlideshowPresenter {
 
         timer = new Timer();
         pictures = persistenceManager.loadPictures();
+        view.picturesUpdated();
 
         if (pictures.isEmpty()) {
             view.noPictures();
@@ -35,7 +36,6 @@ public class SlideshowPresenter {
             this.fullScreen = true;
             view.showPictures();
             view.goFullScreen(TimeUnit.SECONDS.toMillis(3));
-            view.picturesUpdated();
             gotoPicture(0);
         }
 

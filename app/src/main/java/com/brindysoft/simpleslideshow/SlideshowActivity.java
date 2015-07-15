@@ -3,14 +3,15 @@ package com.brindysoft.simpleslideshow;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.StrictMode;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.brindysoft.simpleslideshow.fragments.ImageFragment;
@@ -103,7 +104,8 @@ public class SlideshowActivity extends RoboAppCompatActivity implements Slidesho
 
     @Override
     public void picturesUpdated() {
-        viewPager.getAdapter().notifyDataSetChanged();
+        // TODO if this doesn't work, null it during onPause
+        configureViewPagerAdapter();
     }
 
     @Override
@@ -161,7 +163,7 @@ public class SlideshowActivity extends RoboAppCompatActivity implements Slidesho
     }
 
     private void configureViewPager() {
-        viewPager.setAdapter(new ImagePagerAdapter(getSupportFragmentManager()));
+        configureViewPagerAdapter();
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 
             @Override
@@ -179,6 +181,10 @@ public class SlideshowActivity extends RoboAppCompatActivity implements Slidesho
         });
     }
 
+    private void configureViewPagerAdapter() {
+        viewPager.setAdapter(new ImagePagerAdapter(getSupportFragmentManager()));
+    }
+
     private void goFullScreen() {
         content.setSystemUiVisibility(
                 View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN |
@@ -187,7 +193,7 @@ public class SlideshowActivity extends RoboAppCompatActivity implements Slidesho
                         View.SYSTEM_UI_FLAG_FULLSCREEN);
     }
 
-    class ImagePagerAdapter extends FragmentPagerAdapter {
+    class ImagePagerAdapter extends FragmentStatePagerAdapter {
 
         public ImagePagerAdapter(FragmentManager fragmentManager) {
             super(fragmentManager);

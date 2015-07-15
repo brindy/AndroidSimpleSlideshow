@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -19,6 +20,11 @@ import android.widget.TextView;
 
 import com.brindysoft.simpleslideshow.mvp.EditPicturesPresenter;
 import com.brindysoft.simpleslideshow.mvp.PictureModel;
+import com.makeramen.dragsortadapter.DragSortAdapter;
+
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -143,15 +149,19 @@ public class EditPicturesActivity extends RoboAppCompatActivity implements EditP
 
     private void configureRecyclerView() {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(new PicturesAdapter());
+        recyclerView.setAdapter(new PicturesAdapter(recyclerView));
     }
 
-    class PicturesAdapter extends RecyclerView.Adapter<PictureViewHolder> {
+    class PicturesAdapter extends DragSortAdapter<PictureViewHolder> {
+
+        public PicturesAdapter(RecyclerView recyclerView) {
+            super(recyclerView);
+        }
 
         @Override
         public PictureViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.edit_pictures_row, null);
-            return new PictureViewHolder(view);
+            return new PictureViewHolder(this, view);
         }
 
         @Override
@@ -182,9 +192,31 @@ public class EditPicturesActivity extends RoboAppCompatActivity implements EditP
         public int getItemCount() {
             return presenter.picturesCount();
         }
+
+        @Override
+        public long getItemId(int position) {
+            return presenter.idOfPictureAt(position);
+        }
+
+        @Override
+        public int getPositionForId(long id) {
+            return presenter.positionForPictureWithId(id);
+        }
+
+        @Override
+        public boolean move(int fromPosition, int toPosition) {
+            presenter.movePicture(fromPosition, toPosition);
+            return true;
+        }
+
+        @Override
+        public void onDrop() {
+            Log.d(getClass().getSimpleName(), "onDrop");
+            super.onDrop();
+        }
     }
 
-    class PictureViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    class PictureViewHolder extends DragSortAdapter.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
 
         private final CardView card;
         private final ImageView thumbnail;
@@ -193,14 +225,19 @@ public class EditPicturesActivity extends RoboAppCompatActivity implements EditP
 
         private int position;
 
-        public PictureViewHolder(View itemView) {
-            super(itemView);
+        public PictureViewHolder(DragSortAdapter<?> dragSortAdapter, View itemView) {
+            super(dragSortAdapter, itemView);
             this.card = (CardView)itemView.findViewById(R.id.edit_pictures_row_card);
             this.thumbnail = (ImageView)itemView.findViewById(R.id.edit_pictures_row_image);
             this.uri = (TextView)itemView.findViewById(R.id.edit_pictures_row_uri);
             this.delay = (TextView)itemView.findViewById(R.id.edit_pictures_row_delay);
 
             configureClickListener(itemView);
+            configureLongClickListener(itemView);
+        }
+
+        private void configureLongClickListener(View itemView) {
+            itemView.setOnLongClickListener(this);
         }
 
         private void configureClickListener(View itemView) {
@@ -212,6 +249,11 @@ public class EditPicturesActivity extends RoboAppCompatActivity implements EditP
             presenter.pictureSelectedAt(position);
         }
 
+        @Override
+        public boolean onLongClick(View view) {
+            startDrag();
+            return true;
+        }
     }
 
 }

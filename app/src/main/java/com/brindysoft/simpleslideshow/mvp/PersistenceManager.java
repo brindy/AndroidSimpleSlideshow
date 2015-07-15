@@ -24,12 +24,10 @@ public class PersistenceManager {
     private Context context;
 
     private final Gson gson = new GsonBuilder().create();
-    private List<PictureModel> pictures = new LinkedList<>();
 
     public void savePictures(List<PictureModel> pictures) {
-        this.pictures = pictures;
         SharedPreferences preferences = getSharedPreferences();
-        preferences.edit().putString(PICTURES_KEY, toJson()).apply();
+        preferences.edit().putString(PICTURES_KEY, toJson(pictures)).apply();
     }
 
     public List<PictureModel> loadPictures() {
@@ -41,9 +39,9 @@ public class PersistenceManager {
         return context.getSharedPreferences(SLIDESHOW_PERSISTENCE, Activity.MODE_PRIVATE);
     }
 
-    private String toJson() {
+    private String toJson(List<PictureModel> list) {
         Pictures pictures = new Pictures();
-        pictures.pictures = this.pictures;
+        pictures.pictures = list;
         return gson.toJson(pictures);
     }
 
