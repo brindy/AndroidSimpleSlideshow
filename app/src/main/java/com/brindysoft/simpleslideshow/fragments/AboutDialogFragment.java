@@ -8,6 +8,7 @@ import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -26,6 +27,7 @@ public class AboutDialogFragment extends DialogFragment {
         String title = getString(R.string.about_dialog_title, getVersionName(), getVersionCode());
         TextView.class.cast(view.findViewById(R.id.about_dialog_title)).setText(title);
         Button.class.cast(view.findViewById(R.id.about_dialog_button)).setOnClickListener(createOnClickListener());
+        getDialog().requestWindowFeature(Window.FEATURE_NO_TITLE);
         return view;
     }
 
